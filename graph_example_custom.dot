@@ -1,0 +1,61 @@
+digraph {
+
+		a
+		b
+		c
+		d
+		e
+		f
+        g
+        h
+        i
+        j
+        k
+        l
+        m
+        n
+        o
+        p
+        q
+        r
+        s
+        t
+        
+		a -> b[label="1"];
+		a -> c[label="2"];
+		a -> d[label="6"];
+		a -> e[label="10"];
+        
+		b -> f[label="2"];
+		b -> g[label="3"];
+        b -> d[label="2"];
+        
+		c -> h[label="1"];
+		c -> i[label="2"];
+		c -> j[label="3"];
+
+		d -> k[label="1"];
+		d -> l[label="8"];
+		d -> m[label="3"];
+        
+        e -> a[label="2"];
+		e -> n[label="1"];
+		e -> o[label="2"];
+		e -> p[label="3"];
+        
+        g -> a[label="5"];
+
+		i -> q[label="3"];
+        
+        j -> q[label="1"];
+        
+        l -> r[label="2"];
+        
+        m -> e[label="3"];
+        
+        n -> t[label="7"];
+        
+        r -> s[label="3"];
+        
+        s -> t[label="2"];
+	}

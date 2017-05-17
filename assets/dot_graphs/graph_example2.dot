@@ -1,0 +1,34 @@
+digraph {
+		a
+		b
+		c
+		d
+		e
+		f
+		a -> b[label="4",weight="4"];
+		b -> a[label="4",weight="4"];
+
+		a -> c[label="2",weight="2"];
+		c -> a[label="2",weight="2"];
+
+		b -> c[label="1",weight="1"];
+		c -> b[label="1",weight="1"];
+
+		c -> d[label="8",weight="8"];
+		d -> c[label="8",weight="8"];
+
+		b -> d[label="5",weight="5"];
+		d -> b[label="5",weight="5"];
+
+		c -> e[label="10",weight="10"];
+		e -> c[label="10",weight="10"];
+
+		d -> e[label="2",weight="2"];
+		e -> d[label="2",weight="2"];
+
+		d -> f[label="6",weight="6"];
+		f -> d[label="6",weight="6"];
+
+		e -> f[label="2",weight="2"];
+		f -> e[label="2",weight="2"];
+	}
