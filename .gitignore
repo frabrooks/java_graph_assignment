@@ -4,6 +4,7 @@
 
 
 result.dot
+aStarResult.dot
 outputTest.dot
 source.txt
 *.bash

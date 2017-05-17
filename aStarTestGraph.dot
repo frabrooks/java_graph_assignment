@@ -1,0 +1,25 @@
+digraph {
+
+		a
+		b
+		c
+		d
+		e
+		f
+        g
+        t
+        
+		a -> b[label="2"];
+        
+		b -> c[label="2"];
+        
+		c -> f[label="2"];
+		c -> d[label="1"];
+
+		d -> e[label="1"];
+        
+        f -> g[label="2"];
+        f -> b[label="2"];
+        
+        g -> t[label="2"];
+	}

@@ -395,9 +395,100 @@ public class Graph<T> implements IGraph<T>
     @Override
     public Result<T> aStar(String startVertexId, String endVertexId, BiFunction< IVertex<T>, IVertex<T>, Float > heuristics)
     {
-     return new Result<T>();
+        // Variables
+        ArrayList<IVertex<T>> visited = new ArrayList<IVertex<T>>();
+        ArrayList<IVertex<T>> evaluatedNodes = new ArrayList<IVertex<T>>();
+        Map<IVertex<T>, Float> costMap = new HashMap<IVertex<T>, Float>();
+        Map<IVertex<T>, IVertex<T>> routeMap = new HashMap<IVertex<T>, IVertex<T>>();
+        boolean pathFound = false;
+        boolean noMoreNodes = true;
+        Float currentSmallest = Float.MAX_VALUE;// Used in loop to select next
+                                                // node
+        Result<T> result = new Result<T>();
+
+        // Check starting and end vertex exist
+        IVertex<T> startVertex = vertices.get(startVertexId);
+        IVertex<T> endVertex = vertices.get(endVertexId);
+        if (startVertex == null || endVertex == null) {
+            System.out.println("Error: aStar call with unknown nodes");
+            return result;
+        }
+        // Initialise CostMap with max values
+        for (IVertex<T> v : getVertices()) {
+            costMap.put(v, Float.MAX_VALUE);
+        }
+        // Start vertex obviously costs 0
+        costMap.put(startVertex, heuristics.apply(startVertex, endVertex));
+        visited.add(startVertex);
+
+        // ------------------- A* Algorithm ------------
+        IVertex<T> currentVertex = startVertex;
+        while (true) {
+            evaluatedNodes.add(currentVertex);
+            if (heuristics.apply(currentVertex, endVertex) == 0.0f) {
+                pathFound = true;
+                break;
+            }
+            for (IEdge<T> v : currentVertex.getSuccessors()) {
+                if (evaluatedNodes.contains(v.getTgt())) {
+                    continue;
+                }
+                if (!visited.contains(v.getTgt())) {
+                    visited.add(v.getTgt());
+                }
+                Float estimatedCost = costMap.get(currentVertex) 
+                                        + v.getCost() 
+                                        + heuristics.apply(v.getTgt(), endVertex)
+                                        - heuristics.apply(currentVertex, endVertex);
+                if (estimatedCost <= costMap.get(v.getTgt())) {
+                    costMap.put(v.getTgt(), estimatedCost);
+                    routeMap.put(v.getTgt(), currentVertex);
+                }
+            }
+            currentSmallest = Float.MAX_VALUE;
+            noMoreNodes = true;
+            IVertex<T> potentialNext;
+            for (IVertex<T> v : evaluatedNodes) {
+                for (IEdge<T> e : v.getSuccessors()) {
+                    potentialNext = e.getTgt();
+                    if (currentSmallest >= costMap.get(potentialNext) && !evaluatedNodes.contains(potentialNext)) {
+                        noMoreNodes = false;
+                        currentSmallest = costMap.get(potentialNext);
+                        currentVertex = potentialNext;
+                    }
+                }
+            }
+            // If true then every entry in the costMap, and therefore
+            // every node, must be in 'evaluatedNodes' list and no path exists
+            if (noMoreNodes) {
+                System.out.println("Error: aStar call with unreachable node");
+                break;
+            }
+        }
+        // -------------------- Algorithm End -----------------------------
+
+        if (visited.isEmpty() == false) {
+            result.setVisitedVertices(visited);
+        }
+        if (pathFound == false) {
+            return result;
+        }
+
+        // Last evaluated node = target when a path has been found
+        IVertex<T> end = evaluatedNodes.get(evaluatedNodes.size() - 1);
+        result.setPathCost(costMap.get(end));
+
+        // Get path
+        ArrayList<IVertex<T>> path = new ArrayList<IVertex<T>>();
+        path.add(end);
+        while (path.get(path.size() - 1).equals(startVertex) == false) {
+            path.add(routeMap.get(path.get(path.size() - 1)));
+        }
+        Collections.reverse(path);
+        result.setPath(path);
+
+        return result;
     }
-    
     
  }
 
